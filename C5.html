@@ -3,28 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luyện Tập: Computer Organization</title>
+    <title>Ôn Tập Tùy Chỉnh: Computer Organization</title>
     
     <style>
         :root {
-            --primary-color: #007bff;
-            --success-color: #28a745;
+            --primary-color: #0d6efd;
+            --success-color: #198754;
             --danger-color: #dc3545;
             --light-bg-color: #f8f9fa;
             --border-color: #dee2e6;
             --text-color: #212529;
-            --green-bg: #d4edda;
+            --green-bg: #d1e7dd;
             --red-bg: #f8d7da;
+            --highlight-bg: #fff3cd;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #f0f2f5;
             color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
@@ -37,38 +34,55 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 800px;
-            text-align: center;
+            margin: 20px auto;
         }
 
-        h1, h2 { color: #0056b3; }
+        h1, h2 { color: #0056b3; text-align: center; }
         .hidden { display: none; }
+        
+        /* --- Bố cục TAB --- */
+        .tab-buttons {
+            display: flex;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 1.5em;
+        }
+        .tab-link {
+            padding: 15px 25px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #6c757d;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .tab-link.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
 
         /* --- Phần Lý Thuyết --- */
-        #theory-section {
-            margin-bottom: 2em;
-            text-align: left;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-        }
-        #theory-section summary {
-            font-size: 1.2em;
-            font-weight: bold;
-            padding: 15px;
-            cursor: pointer;
-            outline: none;
-            color: var(--primary-color);
-        }
-        #theory-content {
-            padding: 0 20px 20px 20px;
-            line-height: 1.6;
-        }
-        #theory-content h3 {
+        .tab-content { text-align: left; }
+        #theory h3 {
             border-bottom: 2px solid var(--primary-color);
             padding-bottom: 5px;
             margin-top: 25px;
         }
+        #theory ul { padding-left: 20px; }
+        #theory li { margin-bottom: 10px; }
+        
+        .highlight-box {
+            background-color: var(--highlight-bg);
+            border-left: 5px solid #ffc107;
+            padding: 15px 20px;
+            margin-top: 30px;
+            border-radius: 8px;
+        }
+        .highlight-box h3 { border: none; margin-top: 0; }
 
         /* --- Phần Quiz --- */
+        #practice { text-align: center; }
         button {
             background-color: var(--primary-color);
             color: white;
@@ -81,9 +95,30 @@
             margin: 5px;
             transition: background-color 0.3s ease, transform 0.1s ease;
         }
-        button:hover { background-color: #0056b3; }
+        button:hover { opacity: 0.9; }
         button:active { transform: scale(0.98); }
         button:disabled { background-color: #cccccc; cursor: not-allowed; }
+
+        /* --- Giao diện nhập số câu hỏi --- */
+        #custom-question-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        #question-count-input {
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            font-size: 16px;
+            width: 100px;
+            text-align: center;
+        }
+        #question-count-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
 
         #quiz-header {
             display: flex;
@@ -93,16 +128,8 @@
             padding-bottom: 10px;
             border-bottom: 1px solid #ddd;
         }
-        #progress-text { font-weight: bold; }
-
-        #question-text {
-            font-size: 1.25em;
-            font-weight: bold;
-            margin-bottom: 25px;
-            line-height: 1.4;
-            text-align: left;
-        }
-
+        
+        #question-text { font-size: 1.25em; font-weight: bold; margin-bottom: 25px; line-height: 1.4; text-align: left; }
         .option {
             display: block;
             background-color: var(--light-bg-color);
@@ -115,112 +142,82 @@
             text-align: left;
         }
         .option:hover { border-color: var(--primary-color); }
-        
-        #options-container.answered .option:not(.correct):not(.incorrect) {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-        #options-container.answered .option:hover {
-             border-color: var(--border-color); /* No hover effect after answer */
-        }
-        
-        .option.correct {
-            background-color: var(--green-bg);
-            border-color: var(--success-color);
-            color: var(--success-color);
-            font-weight: bold;
-            pointer-events: none;
-        }
-        .option.incorrect {
-            background-color: var(--red-bg);
-            border-color: var(--danger-color);
-            color: var(--danger-color);
-            font-weight: bold;
-            pointer-events: none;
-        }
+        .option.correct { background-color: var(--green-bg); border-color: var(--success-color); font-weight: bold; pointer-events: none; }
+        .option.incorrect { background-color: var(--red-bg); border-color: var(--danger-color); font-weight: bold; pointer-events: none; }
+        #options-container.answered .option:not(.correct):not(.incorrect) { opacity: 0.6; pointer-events: none; }
         
         #feedback-container { text-align: left; margin-top: 20px; }
-        .memory-tip {
-            font-style: italic;
-            color: #6c757d;
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 15px;
-            border-left: 4px solid var(--primary-color);
-        }
+        .memory-tip { font-style: italic; color: #6c757d; background: #e9ecef; padding: 15px; border-radius: 6px; margin-top: 15px; border-left: 4px solid var(--primary-color); }
 
-        #navigation-buttons button { margin-top: 15px; }
         #next-btn { background-color: var(--success-color); }
-        #next-btn:hover { background-color: #218838; }
-
-        /* --- Trang Kết Quả --- */
         #results-screen { text-align: left; }
-        #score-text { font-size: 1.5em; font-weight: bold; text-align: center; margin-bottom: 20px; }
-        .result-item {
-            background: #fdfdff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        .result-question { font-weight: bold; }
-        .user-answer { padding-left: 15px; }
+        .result-item { background: #fdfdff; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
         .user-answer.correct { color: var(--success-color); }
         .user-answer.incorrect { color: var(--danger-color); text-decoration: line-through;}
-        .correct-answer { color: var(--success-color); font-weight: bold; padding-left: 15px;}
+        .correct-answer { color: var(--success-color); font-weight: bold; }
 
     </style>
 </head>
 <body>
     <div id="app-container">
         <h1>Ôn Tập Chapter 5: Computer Organization</h1>
+        
+        <div class="tab-buttons">
+            <button class="tab-link active" data-tab="theory">Lý Thuyết</button>
+            <button class="tab-link" data-tab="practice">Bài Tập</button>
+        </div>
 
-        <details id="theory-section">
-            <summary>▶ Nhấn vào đây để xem lại tóm tắt lý thuyết</summary>
-            <div id="theory-content">
-                <p>Một máy tính được cấu thành từ ba hệ thống con cơ bản: <strong>Đơn vị Xử lý Trung tâm (CPU)</strong>, <strong>Bộ nhớ chính (Main Memory)</strong>, và <strong>Hệ thống Nhập/Xuất (I/O)</strong>.</p>
-                <h3>1. CPU (Central Processing Unit)</h3>
+        <div id="theory" class="tab-content active">
+            <p>Một máy tính được cấu thành từ ba hệ thống con cơ bản: <strong>Đơn vị Xử lý Trung tâm (CPU)</strong>, <strong>Bộ nhớ chính (Main Memory)</strong>, và <strong>Hệ thống Nhập/Xuất (I/O)</strong>.</p>
+            <h3>1. CPU (Central Processing Unit)</h3>
+            <ul>
+                <li>Được xem là "bộ não" của máy tính, có ba thành phần chính:
+                    <ul>
+                        <li><strong>ALU (Arithmetic Logic Unit):</strong> Thực hiện các phép toán số học và logic.</li>
+                        <li><strong>Control Unit (Khối Điều khiển):</strong> Điều phối và kiểm soát mọi hoạt động.</li>
+                        <li><strong>Registers (Thanh ghi):</strong> Vùng nhớ tạm thời tốc độ cực cao. Hai thanh ghi quan trọng là <strong>Program Counter (PC)</strong> và <strong>Instruction Register (IR)</strong>.</li>
+                    </ul>
+                </li>
+            </ul>
+            <h3>2. Bộ Nhớ Chính (Main Memory)</h3>
+            <ul>
+                <li>Là nơi lưu trữ chương trình và dữ liệu CPU đang làm việc.</li>
+                <li><strong>RAM (Random Access Memory):</strong> Bộ nhớ đọc-ghi, dữ liệu <strong>mất khi ngắt điện</strong> (volatile).</li>
+                <li><strong>ROM (Read-Only Memory):</strong> Bộ nhớ chỉ đọc, <strong>không mất dữ liệu</strong> khi ngắt điện (non-volatile).</li>
+                <li><strong>Cache Memory:</strong> Bộ nhớ đệm siêu nhanh, nằm giữa CPU và RAM để tăng tốc độ truy cập.</li>
+            </ul>
+            <h3>3. Hệ Thống Nhập/Xuất (I/O)</h3>
+            <ul>
+                <li>Giúp máy tính giao tiếp với thế giới bên ngoài.</li>
+                <li>Gồm các thiết bị lưu trữ (ổ đĩa) và không lưu trữ (bàn phím, màn hình).</li>
+                <li>Kết nối qua <strong>Bus</strong> (Data, Address, Control) và các bộ điều khiển (Controllers) như USB.</li>
+            </ul>
+            <h3>4. Thực Thi Chương Trình và Kiến Trúc</h3>
+            <ul>
+                <li>CPU thực thi theo <strong>Chu kỳ máy (Machine Cycle)</strong>: <strong>Fetch (Nạp)</strong> -> <strong>Decode (Giải mã)</strong> -> <strong>Execute (Thực thi)</strong>.</li>
+                <li><strong>Pipelining:</strong> Kỹ thuật xử lý gối đầu nhiều lệnh cùng lúc để tăng hiệu suất.</li>
+                <li><strong>Xử lý song song (Parallel Processing):</strong> Dùng nhiều đơn vị xử lý để thực hiện nhiều việc đồng thời.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <h3>💡 Những Gì Cần Nhớ</h3>
                 <ul>
-                    <li>Được xem là "bộ não" của máy tính, có ba thành phần chính:
-                        <ul>
-                            <li><strong>ALU (Arithmetic Logic Unit):</strong> Thực hiện các phép toán số học (cộng, trừ) và logic (AND, OR, NOT).</li>
-                            <li><strong>Control Unit (Khối Điều khiển):</strong> Điều phối và kiểm soát mọi hoạt động của máy tính.</li>
-                            <li><strong>Registers (Thanh ghi):</strong> Vùng nhớ tạm thời tốc độ cực cao. Hai thanh ghi quan trọng là <strong>Program Counter (PC)</strong> (lưu địa chỉ lệnh kế tiếp) và <strong>Instruction Register (IR)</strong> (lưu lệnh đang thực thi).</li>
-                        </ul>
-                    </li>
-                </ul>
-                <h3>2. Bộ Nhớ Chính (Main Memory)</h3>
-                <ul>
-                    <li>Là nơi lưu trữ chương trình và dữ liệu mà CPU đang làm việc.</li>
-                    <li><strong>RAM (Random Access Memory):</strong> Bộ nhớ đọc-ghi, dữ liệu sẽ <strong>mất khi ngắt điện</strong>. Gồm SRAM (nhanh) và DRAM (chậm hơn, cần làm mới).</li>
-                    <li><strong>ROM (Read-Only Memory):</strong> Bộ nhớ chỉ đọc, <strong>không mất dữ liệu</strong> khi ngắt điện, thường chứa chương trình khởi động.</li>
-                    <li><strong>Cache Memory:</strong> Bộ nhớ đệm siêu nhanh, nằm giữa CPU và RAM để tăng tốc độ truy cập.</li>
-                </ul>
-                <h3>3. Hệ Thống Nhập/Xuất (I/O)</h3>
-                <ul>
-                    <li>Giúp máy tính giao tiếp với thế giới bên ngoài.</li>
-                    <li>Gồm các thiết bị lưu trữ (ổ đĩa từ, đĩa quang CD/DVD) và không lưu trữ (bàn phím, màn hình).</li>
-                    <li>Kết nối qua <strong>Bus</strong> (Data, Address, Control) và các bộ điều khiển (Controllers) như USB.</li>
-                </ul>
-                <h3>4. Thực Thi Chương Trình và Kiến Trúc</h3>
-                <ul>
-                    <li>CPU thực thi theo <strong>Chu kỳ máy (Machine Cycle)</strong>: <strong>Fetch (Nạp)</strong> -> <strong>Decode (Giải mã)</strong> -> <strong>Execute (Thực thi)</strong>.</li>
-                    <li><strong>Pipelining:</strong> Kỹ thuật xử lý gối đầu nhiều lệnh cùng lúc để tăng hiệu suất.</li>
-                    <li><strong>Xử lý song song (Parallel Processing):</strong> Dùng nhiều đơn vị xử lý để thực hiện nhiều việc đồng thời.</li>
+                    <li><strong>3 thành phần cốt lõi:</strong> CPU (não), Main Memory (không gian làm việc), I/O (giao tiếp).</li>
+                    <li><strong>CPU = ALU + Control Unit + Registers.</strong></li>
+                    <li><strong>RAM thì mất điện là mất dữ liệu, ROM thì không.</strong></li>
+                    <li><strong>Cache</strong> làm tăng tốc độ bằng cách giữ lại những gì hay dùng.</li>
+                    <li>Chu trình bất biến của CPU là <strong>Fetch -> Decode -> Execute.</strong></li>
                 </ul>
             </div>
-        </details>
+        </div>
 
-        <div id="quiz-container">
-            <div id="start-screen">
+        <div id="practice" class="tab-content">
+             <div id="start-screen">
                 <h2>Chế độ Luyện tập</h2>
-                <p>Chọn một đáp án để nhận phản hồi ngay lập tức. Bạn có thể nộp bài bất cứ lúc nào.</p>
-                 <div id="quiz-options">
-                    <button class="quiz-option-btn" data-count="10">10 Câu</button>
-                    <button class="quiz-option-btn" data-count="25">25 Câu</button>
-                    <button class="quiz-option-btn" data-count="50">50 Câu</button>
-                    <button class="quiz-option-btn" data-count="100">Tất cả (100 Câu)</button>
+                <p>Nhập số câu hỏi bạn muốn làm (từ 1 đến 100), sau đó nhấn Bắt đầu.</p>
+                <div id="custom-question-container">
+                    <input type="number" id="question-count-input" min="1" max="100" placeholder="VD: 20">
+                    <button id="start-custom-quiz-btn">Bắt đầu</button>
                 </div>
             </div>
     
@@ -255,7 +252,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const questionBank = [
+            // --- Ngân hàng câu hỏi (100 câu) ---
+            const questionBank = [];
+            const sampleQuestions = [
                 { question: "Ba hệ thống con (subsystems) chính cấu tạo nên một máy tính là gì?", options: ["CPU, Bàn phím, Màn hình", "CPU, Bộ nhớ chính, Hệ thống I/O", "ALU, Control Unit, RAM", "Ổ cứng, RAM, Chuột"], answer: 1, tip: "Hãy nhớ 3 thành phần cốt lõi: Bộ não (CPU), Nơi làm việc (Bộ nhớ chính), và Cổng giao tiếp (I/O)." },
                 { question: "Thành phần nào trong CPU chịu trách nhiệm thực hiện các phép toán số học và logic?", options: ["Control Unit", "Registers", "ALU (Arithmetic Logic Unit)", "Program Counter"], answer: 2, tip: "'Arithmetic' là số học, 'Logic' là logic. ALU chính là viết tắt của hai chức năng này." },
                 { question: "Thanh ghi (Register) nào trong CPU giữ địa chỉ của lệnh kế tiếp sẽ được thực thi?", options: ["Instruction Register (IR)", "Data Register (DR)", "Program Counter (PC)", "Accumulator (AC)"], answer: 2, tip: "'Program Counter' giống như một người 'đếm' xem chương trình đã chạy đến dòng lệnh nào." },
@@ -267,16 +266,35 @@
                 { question: "Kỹ thuật nào cho phép CPU xử lý gối đầu các pha của nhiều lệnh khác nhau cùng một lúc để tăng hiệu suất?", options: ["Parallel Processing", "Pipelining", "DMA", "Multitasking"], answer: 1, tip: "Pipelining giống như một dây chuyền lắp ráp, mỗi công đoạn xử lý một sản phẩm khác nhau, giúp tăng tổng sản lượng." },
                 { question: "Phương pháp nào cho phép một thiết bị I/O tốc độ cao truyền dữ liệu trực tiếp với bộ nhớ chính mà không cần sự can thiệp của CPU?", options: ["Programmed I/O", "Interrupt-driven I/O", "DMA (Direct Memory Access)", "Memory-mapped I/O"], answer: 2, tip: "DMA là 'truy cập bộ nhớ trực tiếp', nghĩa là đi thẳng đến bộ nhớ mà không cần qua 'trung gian' CPU." }
             ];
+            questionBank.push(...sampleQuestions);
             while (questionBank.length < 100) {
                 const index = questionBank.length + 1;
                 questionBank.push({ question: `Đây là câu hỏi ví dụ số ${index}.`, options: [`Đáp án A của câu ${index}`, `Đáp án B`, `Đáp án C`, `Đáp án D`], answer: Math.floor(Math.random() * 4), tip: `Đây là mẹo ghi nhớ cho câu hỏi ${index}.`});
             }
 
+            // --- Logic cho TAB ---
+            const tabLinks = document.querySelectorAll('.tab-link');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const tabId = link.dataset.tab;
+
+                    tabLinks.forEach(item => item.classList.remove('active'));
+                    tabContents.forEach(item => item.classList.remove('active'));
+
+                    link.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // --- Logic cho Quiz ---
             const startScreen = document.getElementById('start-screen');
             const quizScreen = document.getElementById('quiz-screen');
             const resultsScreen = document.getElementById('results-screen');
             
-            const quizOptionBtns = document.querySelectorAll('.quiz-option-btn');
+            const startCustomBtn = document.getElementById('start-custom-quiz-btn');
+            const questionCountInput = document.getElementById('question-count-input');
             const nextBtn = document.getElementById('next-btn');
             const submitBtn = document.getElementById('submit-btn');
             const restartBtn = document.getElementById('restart-btn');
@@ -380,7 +398,7 @@
 
                 for(let i=0; i < userAnswers.length; i++){
                     const answerData = userAnswers[i];
-                    if(!answerData) continue; // Skip unanswered questions
+                    if(!answerData) continue;
 
                     const isCorrect = answerData.chosenAnswer === answerData.correctAnswer;
                     if(isCorrect) score++;
@@ -398,7 +416,7 @@
                         answerHtml = `<p class="user-answer correct">Bạn chọn: ${chosenText}</p>`;
                     }
 
-                    resultItem.innerHTML = `<p class="result-question">${i+1}. ${answerData.question}</p>${answerHtml}`;
+                    resultItem.innerHTML = `<p><strong>Câu ${i+1}:</strong> ${answerData.question}</p>${answerHtml}`;
                     resultsDetails.appendChild(resultItem);
                 }
 
@@ -407,10 +425,13 @@
                 submitBtn.textContent = 'Nộp bài';
             }
             
-            quizOptionBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    startQuiz(parseInt(btn.dataset.count, 10));
-                });
+            startCustomBtn.addEventListener('click', () => {
+                const count = parseInt(questionCountInput.value);
+                if (isNaN(count) || count < 1 || count > 100) {
+                    alert('Vui lòng nhập một số hợp lệ từ 1 đến 100.');
+                    return;
+                }
+                startQuiz(count);
             });
 
             nextBtn.addEventListener('click', handleNextQuestion);
