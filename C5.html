@@ -7,22 +7,22 @@
     
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #f0f2f5;
-            color: #333;
+            color: #1c1e21;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             box-sizing: border-box;
         }
 
         #app-container {
             background-color: white;
             padding: 2em;
-            border-radius: 10px;
+            border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 800px;
@@ -31,6 +31,19 @@
 
         h1, h2 {
             color: #0056b3;
+        }
+        
+        #start-screen p {
+            font-size: 1.1em;
+            color: #606770;
+        }
+        
+        #quiz-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
         }
 
         .hidden {
@@ -42,15 +55,20 @@
             color: white;
             border: none;
             padding: 12px 24px;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            margin: 10px 5px;
-            transition: background-color 0.3s ease;
+            font-weight: bold;
+            margin: 5px;
+            transition: background-color 0.3s ease, transform 0.1s ease;
         }
-
+        
         button:hover {
             background-color: #0056b3;
+        }
+        
+        button:active {
+            transform: scale(0.98);
         }
 
         button:disabled {
@@ -63,6 +81,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
         }
 
         #question-container {
@@ -71,33 +91,43 @@
         }
 
         #question-text {
-            font-size: 1.2em;
+            font-size: 1.25em;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            line-height: 1.4;
         }
 
         #options-container .option {
             display: block;
             background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
+            border: 2px solid #dee2e6;
             padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
+            margin-bottom: 12px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s ease-in-out;
         }
 
         #options-container .option:hover {
+            border-color: #007bff;
             background-color: #e9ecef;
         }
 
         #options-container .option.selected {
             background-color: #cce5ff;
             border-color: #007bff;
+            font-weight: bold;
         }
 
         #navigation-buttons {
             margin-top: 20px;
+        }
+        
+        #restart-btn {
+            background-color: #28a745;
+        }
+        #restart-btn:hover {
+            background-color: #218838;
         }
 
         #results-screen {
@@ -114,17 +144,14 @@
         .result-item {
             background: #f9f9f9;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 8px;
             padding: 15px;
             margin-bottom: 15px;
         }
 
-        .result-item p {
-            margin: 5px 0;
-        }
-
         .result-question {
             font-weight: bold;
+            color: #333;
         }
 
         .user-answer.correct {
@@ -144,10 +171,11 @@
         .memory-tip {
             font-style: italic;
             color: #6c757d;
-            background: #eef;
-            padding: 8px;
-            border-radius: 4px;
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 6px;
             margin-top: 10px;
+            border-left: 4px solid #007bff;
         }
     </style>
 </head>
@@ -157,13 +185,18 @@
 
         <div id="start-screen">
             <h2>Chế độ: Kiểm Tra (Test Mode)</h2>
-            <p>Bạn sẽ trả lời 100 câu hỏi. Kết quả chỉ được hiển thị sau khi bạn nộp bài.</p>
-            <button id="start-btn">Bắt đầu làm bài</button>
+            <p>Kết quả chỉ được hiển thị sau khi bạn nộp bài.</p>
+             <div id="quiz-options">
+                <button class="quiz-option-btn" data-count="10">10 Câu</button>
+                <button class="quiz-option-btn" data-count="25">25 Câu</button>
+                <button class="quiz-option-btn" data-count="50">50 Câu</button>
+                <button class="quiz-option-btn" data-count="100">Tất cả (100 Câu)</button>
+            </div>
         </div>
 
         <div id="quiz-screen" class="hidden">
             <div id="quiz-header">
-                <p id="progress-text">Câu hỏi 1 trên 100</p>
+                <p id="progress-text"></p>
                 <button id="submit-btn">Nộp bài</button>
             </div>
             <div id="question-container">
@@ -179,133 +212,47 @@
         <div id="results-screen" class="hidden">
             <h2>Kết quả bài làm</h2>
             <p id="score-text"></p>
-            <button id="restart-btn">Làm lại bài khác</button>
+            <button id="restart-btn">Làm lại từ đầu</button>
             <div id="results-details"></div>
         </div>
     </div>
-
-    <div id="google_translate_element" style="position: fixed; bottom: 10px; right: 10px;"></div>
-
+    
+    <div id="google_translate_element" style="position: fixed; bottom: 10px; right: 10px; z-index: 1000;"></div>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-    <script type="text/javascript">
+
+    <script>
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({pageLanguage: 'vi', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
         }
-    </script>
 
-    <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Ngân hàng câu hỏi
             const questionBank = [
-                {
-                    question: "Ba hệ thống con (subsystems) chính cấu tạo nên một máy tính là gì?",
-                    options: ["CPU, Bàn phím, Màn hình", "CPU, Bộ nhớ chính, Hệ thống I/O", "ALU, Control Unit, RAM", "Ổ cứng, RAM, Chuột"],
-                    answer: 1,
-                    tip: "Hãy nhớ 3 thành phần cốt lõi: Bộ não (CPU), Nơi làm việc (Bộ nhớ chính), và Cổng giao tiếp (I/O)."
-                },
-                {
-                    question: "Thành phần nào trong CPU chịu trách nhiệm thực hiện các phép toán số học và logic?",
-                    options: ["Control Unit", "Registers", "ALU (Arithmetic Logic Unit)", "Program Counter"],
-                    answer: 2,
-                    tip: "'Arithmetic' là số học, 'Logic' là logic. ALU chính là viết tắt của hai chức năng này."
-                },
-                {
-                    question: "Thanh ghi (Register) nào trong CPU giữ địa chỉ của lệnh kế tiếp sẽ được thực thi?",
-                    options: ["Instruction Register (IR)", "Data Register", "Program Counter (PC)", "Accumulator"],
-                    answer: 2,
-                    tip: "'Program Counter' giống như một người 'đếm' xem chương trình đã chạy đến dòng lệnh nào."
-                },
-                {
-                    question: "Đặc điểm nào phân biệt RAM với ROM?",
-                    options: ["RAM là bộ nhớ không khả biến (non-volatile)", "RAM có thể đọc và ghi dữ liệu, còn ROM chủ yếu chỉ để đọc", "RAM chậm hơn ROM", "ROM được dùng làm bộ nhớ chính cho các ứng dụng"],
-                    answer: 1,
-                    tip: "RAM (Random Access Memory) là bộ nhớ truy cập ngẫu nhiên, cho phép cả đọc và ghi. ROM (Read-Only Memory) là bộ nhớ chỉ đọc."
-                },
-                {
-                    question: "Mục đích chính của bộ nhớ đệm (Cache Memory) là gì?",
-                    options: ["Lưu trữ vĩnh viễn hệ điều hành", "Tăng tốc độ truy cập đến dữ liệu thường dùng từ bộ nhớ chính", "Thay thế hoàn toàn bộ nhớ RAM", "Kết nối các thiết bị ngoại vi"],
-                    answer: 1,
-                    tip: "Cache giống như một ngăn tủ nhỏ chứa những món đồ bạn hay dùng nhất để lấy cho nhanh, thay vì phải vào kho lớn (RAM) để tìm."
-                },
-                {
-                    question: "Hệ thống Bus trong máy tính bao gồm ba loại chính nào?",
-                    options: ["USB, FireWire, HDMI", "Serial, Parallel, Optical", "Data Bus, Address Bus, Control Bus", "Internal, External, System"],
-                    answer: 2,
-                    tip: "Hãy tưởng tượng một con đường 3 làn: một làn chở địa chỉ (Address), một làn chở dữ liệu (Data), và một làn cho tín hiệu đèn giao thông (Control)."
-                },
-                {
-                    question: "Chu kỳ máy (Machine Cycle) của CPU bao gồm ba pha cơ bản nào theo đúng thứ tự?",
-                    options: ["Decode, Fetch, Execute", "Fetch, Execute, Decode", "Fetch, Decode, Execute", "Execute, Fetch, Decode"],
-                    answer: 2,
-                    tip: "Quy trình hợp lý: Lấy lệnh (Fetch), Hiểu lệnh (Decode), rồi mới làm theo lệnh (Execute)."
-                },
-                {
-                    question: "Kiến trúc máy tính nào sử dụng một tập lệnh lớn và phức tạp, bao gồm cả những lệnh có thể thực hiện các tác vụ phức tạp?",
-                    options: ["RISC (Reduced Instruction Set Computer)", "MIMD", "CISC (Complex Instruction Set Computer)", "SIMD"],
-                    answer: 2,
-                    tip: "C trong CISC là viết tắt của 'Complex' (phức tạp)."
-                },
-                {
-                    question: "Kỹ thuật nào cho phép CPU xử lý gối đầu các pha của nhiều lệnh khác nhau cùng một lúc để tăng hiệu suất?",
-                    options: ["Parallel Processing", "Pipelining", "DMA", "Multitasking"],
-                    answer: 1,
-                    tip: "Pipelining giống như một dây chuyền lắp ráp, mỗi công đoạn xử lý một sản phẩm khác nhau, giúp tăng tổng sản lượng."
-                },
-                {
-                    question: "Phương pháp nào cho phép một thiết bị I/O tốc độ cao truyền dữ liệu trực tiếp với bộ nhớ chính mà không cần sự can thiệp của CPU?",
-                    options: ["Programmed I/O", "Interrupt-driven I/O", "DMA (Direct Memory Access)", "Memory-mapped I/O"],
-                    answer: 2,
-                    tip: "DMA là 'truy cập bộ nhớ trực tiếp', nghĩa là đi thẳng đến bộ nhớ mà không cần qua 'trung gian' CPU."
-                },
-                {
-                    question: "Loại RAM nào cần được làm tươi (refresh) định kỳ để không mất dữ liệu?",
-                    options: ["SRAM (Static RAM)", "DRAM (Dynamic RAM)", "ROM", "EPROM"],
-                    answer: 1,
-                    tip: "D trong DRAM là 'Dynamic' (động), nó cần được nạp lại năng lượng liên tục, giống như phải liên tục 'hoạt động' để giữ dữ liệu."
-                },
-                {
-                    question: "Đơn vị nhỏ nhất có thể truy cập trên một đĩa từ là gì?",
-                    options: ["Track", "Cylinder", "Sector", "Block"],
-                    answer: 2,
-                    tip: "Hãy hình dung một cái bánh pizza: Track là vòng tròn đồng tâm, và Sector là từng miếng bánh nhỏ."
-                },
-                {
-                    question: "Chuẩn kết nối nào thường được mô tả là 'hot-swappable' và có thể kết nối tới 127 thiết bị theo cấu trúc cây?",
-                    options: ["SCSI", "FireWire", "USB", "HDMI"],
-                    answer: 2,
-                    tip: "USB (Universal Serial Bus) nổi tiếng với khả năng cắm nóng (hot-swappable) và kết nối nhiều thiết bị."
-                },
-                {
-                    question: "Trong phân loại của Flynn, kiến trúc nào có một luồng lệnh và nhiều luồng dữ liệu, phù hợp cho xử lý mảng?",
-                    options: ["SISD", "SIMD", "MISD", "MIMD"],
-                    answer: 1,
-                    tip: "SIMD: Single Instruction, Multiple Data. Một lệnh duy nhất được áp dụng cho nhiều dữ liệu cùng lúc."
-                },
-                {
-                    question: "Phương pháp địa chỉ hóa I/O nào coi các thanh ghi của bộ điều khiển I/O như là các ô nhớ trong bộ nhớ chính?",
-                    options: ["Isolated I/O", "Programmed I/O", "Memory-mapped I/O", "DMA"],
-                    answer: 2,
-                    tip: "'Memory-mapped' có nghĩa là 'ánh xạ vào bộ nhớ', coi thiết bị I/O như một phần của không gian địa chỉ bộ nhớ."
-                },
-                // Các câu hỏi giả để đủ 100 câu
+                { question: "Ba hệ thống con (subsystems) chính cấu tạo nên một máy tính là gì?", options: ["CPU, Bàn phím, Màn hình", "CPU, Bộ nhớ chính, Hệ thống I/O", "ALU, Control Unit, RAM", "Ổ cứng, RAM, Chuột"], answer: 1, tip: "Hãy nhớ 3 thành phần cốt lõi: Bộ não (CPU), Nơi làm việc (Bộ nhớ chính), và Cổng giao tiếp (I/O)." },
+                { question: "Thành phần nào trong CPU chịu trách nhiệm thực hiện các phép toán số học và logic?", options: ["Control Unit", "Registers", "ALU (Arithmetic Logic Unit)", "Program Counter"], answer: 2, tip: "'Arithmetic' là số học, 'Logic' là logic. ALU chính là viết tắt của hai chức năng này." },
+                { question: "Thanh ghi (Register) nào trong CPU giữ địa chỉ của lệnh kế tiếp sẽ được thực thi?", options: ["Instruction Register (IR)", "Data Register", "Program Counter (PC)", "Accumulator"], answer: 2, tip: "'Program Counter' giống như một người 'đếm' xem chương trình đã chạy đến dòng lệnh nào." },
+                { question: "Đặc điểm nào phân biệt RAM với ROM?", options: ["RAM là bộ nhớ không khả biến (non-volatile)", "RAM có thể đọc và ghi dữ liệu, còn ROM chủ yếu chỉ để đọc", "RAM chậm hơn ROM", "ROM được dùng làm bộ nhớ chính cho các ứng dụng"], answer: 1, tip: "RAM (Random Access Memory) là bộ nhớ truy cập ngẫu nhiên, cho phép cả đọc và ghi. ROM (Read-Only Memory) là bộ nhớ chỉ đọc." },
+                { question: "Mục đích chính của bộ nhớ đệm (Cache Memory) là gì?", options: ["Lưu trữ vĩnh viễn hệ điều hành", "Tăng tốc độ truy cập đến dữ liệu thường dùng từ bộ nhớ chính", "Thay thế hoàn toàn bộ nhớ RAM", "Kết nối các thiết bị ngoại vi"], answer: 1, tip: "Cache giống như một ngăn tủ nhỏ chứa những món đồ bạn hay dùng nhất để lấy cho nhanh, thay vì phải vào kho lớn (RAM) để tìm." },
+                { question: "Hệ thống Bus trong máy tính bao gồm ba loại chính nào?", options: ["USB, FireWire, HDMI", "Serial, Parallel, Optical", "Data Bus, Address Bus, Control Bus", "Internal, External, System"], answer: 2, tip: "Hãy tưởng tượng một con đường 3 làn: một làn chở địa chỉ (Address), một làn chở dữ liệu (Data), và một làn cho tín hiệu đèn giao thông (Control)." },
+                { question: "Chu kỳ máy (Machine Cycle) của CPU bao gồm ba pha cơ bản nào theo đúng thứ tự?", options: ["Decode, Fetch, Execute", "Fetch, Execute, Decode", "Fetch, Decode, Execute", "Execute, Fetch, Decode"], answer: 2, tip: "Quy trình hợp lý: Lấy lệnh (Fetch), Hiểu lệnh (Decode), rồi mới làm theo lệnh (Execute)." },
+                { question: "Kiến trúc máy tính nào sử dụng một tập lệnh lớn và phức tạp?", options: ["RISC (Reduced Instruction Set Computer)", "MIMD", "CISC (Complex Instruction Set Computer)", "SIMD"], answer: 2, tip: "C trong CISC là viết tắt của 'Complex' (phức tạp)." },
+                { question: "Kỹ thuật nào cho phép CPU xử lý gối đầu các pha của nhiều lệnh khác nhau cùng một lúc để tăng hiệu suất?", options: ["Parallel Processing", "Pipelining", "DMA", "Multitasking"], answer: 1, tip: "Pipelining giống như một dây chuyền lắp ráp, mỗi công đoạn xử lý một sản phẩm khác nhau, giúp tăng tổng sản lượng." },
+                { question: "Phương pháp nào cho phép một thiết bị I/O tốc độ cao truyền dữ liệu trực tiếp với bộ nhớ chính mà không cần sự can thiệp của CPU?", options: ["Programmed I/O", "Interrupt-driven I/O", "DMA (Direct Memory Access)", "Memory-mapped I/O"], answer: 2, tip: "DMA là 'truy cập bộ nhớ trực tiếp', nghĩa là đi thẳng đến bộ nhớ mà không cần qua 'trung gian' CPU." },
+                { question: "Loại RAM nào cần được làm tươi (refresh) định kỳ để không mất dữ liệu?", options: ["SRAM (Static RAM)", "DRAM (Dynamic RAM)", "ROM", "EPROM"], answer: 1, tip: "D trong DRAM là 'Dynamic' (động), nó cần được nạp lại năng lượng liên tục để giữ dữ liệu." },
+                { question: "Đơn vị nhỏ nhất có thể truy cập trên một đĩa từ là gì?", options: ["Track", "Cylinder", "Sector", "Block"], answer: 2, tip: "Hãy hình dung một cái bánh pizza: Track là vòng tròn đồng tâm, và Sector là từng miếng bánh nhỏ." },
+                { question: "Chuẩn kết nối nào thường được mô tả là 'hot-swappable' và có thể kết nối tới 127 thiết bị theo cấu trúc cây?", options: ["SCSI", "FireWire", "USB", "HDMI"], answer: 2, tip: "USB (Universal Serial Bus) nổi tiếng với khả năng cắm nóng (hot-swappable) và kết nối nhiều thiết bị." },
+                { question: "Trong phân loại của Flynn, kiến trúc nào có một luồng lệnh và nhiều luồng dữ liệu, phù hợp cho xử lý mảng?", options: ["SISD", "SIMD", "MISD", "MIMD"], answer: 1, tip: "SIMD: Single Instruction, Multiple Data. Một lệnh duy nhất được áp dụng cho nhiều dữ liệu cùng lúc." },
+                { question: "Phương pháp địa chỉ hóa I/O nào coi các thanh ghi của bộ điều khiển I/O như là các ô nhớ trong bộ nhớ chính?", options: ["Isolated I/O", "Programmed I/O", "Memory-mapped I/O", "DMA"], answer: 2, tip: "'Memory-mapped' có nghĩa là 'ánh xạ vào bộ nhớ', coi thiết bị I/O như một phần của không gian địa chỉ bộ nhớ." },
             ];
-
             while (questionBank.length < 100) {
                 const index = questionBank.length + 1;
-                questionBank.push({
-                    question: `Đây là câu hỏi ví dụ số ${index}. Vui lòng thay thế bằng nội dung thật.`,
-                    options: [`Đáp án A của câu ${index}`, `Đáp án B của câu ${index}`, `Đáp án C của câu ${index}`, `Đáp án D của câu ${index}`],
-                    answer: Math.floor(Math.random() * 4),
-                    tip: `Đây là mẹo ghi nhớ cho câu hỏi ${index}.`
-                });
+                questionBank.push({ question: `Đây là câu hỏi ví dụ số ${index}.`, options: [`Đáp án A của câu ${index}`, `Đáp án B`, `Đáp án C`, `Đáp án D`], answer: Math.floor(Math.random() * 4), tip: `Đây là mẹo ghi nhớ cho câu hỏi ${index}.`});
             }
-
 
             const startScreen = document.getElementById('start-screen');
             const quizScreen = document.getElementById('quiz-screen');
             const resultsScreen = document.getElementById('results-screen');
-
-            const startBtn = document.getElementById('start-btn');
+            
+            const quizOptionBtns = document.querySelectorAll('.quiz-option-btn');
             const prevBtn = document.getElementById('prev-btn');
             const nextBtn = document.getElementById('next-btn');
             const submitBtn = document.getElementById('submit-btn');
@@ -328,9 +275,9 @@
                 }
             }
 
-            function startQuiz() {
+            function startQuiz(questionCount) {
                 shuffleArray(questionBank);
-                currentQuestions = questionBank.slice(0, 100);
+                currentQuestions = questionBank.slice(0, questionCount);
                 currentQuestionIndex = 0;
                 userAnswers = new Array(currentQuestions.length).fill(null);
 
@@ -389,9 +336,7 @@
                 currentQuestions.forEach((question, index) => {
                     const userAnswerIndex = userAnswers[index];
                     const isCorrect = userAnswerIndex === question.answer;
-                    if (isCorrect) {
-                        score++;
-                    }
+                    if (isCorrect) score++;
 
                     const resultItem = document.createElement('div');
                     resultItem.classList.add('result-item');
@@ -410,14 +355,18 @@
                         ${!isCorrect ? `<p class="correct-answer">Đáp án đúng: ${question.options[question.answer]}</p>` : ''}
                         <p class="memory-tip">💡 Mẹo ghi nhớ: ${question.tip}</p>
                     `;
-
                     resultsDetails.appendChild(resultItem);
                 });
-
                 scoreText.textContent = `Bạn đã trả lời đúng ${score} trên ${currentQuestions.length} câu!`;
             }
             
-            startBtn.addEventListener('click', startQuiz);
+            quizOptionBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const count = parseInt(btn.dataset.count, 10);
+                    startQuiz(count);
+                });
+            });
+
             prevBtn.addEventListener('click', () => changeQuestion(-1));
             nextBtn.addEventListener('click', () => changeQuestion(1));
             submitBtn.addEventListener('click', () => {
@@ -425,9 +374,11 @@
                     showResults();
                 }
             });
-            restartBtn.addEventListener('click', startQuiz);
+            restartBtn.addEventListener('click', () => {
+                resultsScreen.classList.add('hidden');
+                startScreen.classList.remove('hidden');
+            });
         });
     </script>
-
 </body>
 </html>
