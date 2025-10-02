@@ -16,7 +16,6 @@
             --text-color: #212529;
             --green-bg: #d1e7dd;
             --red-bg: #f8d7da;
-            --yellow-bg: #fff3cd;
         }
 
         body {
@@ -41,7 +40,6 @@
         h1 { color: #0056b3; text-align: center; margin-top: 0; }
         .hidden { display: none; }
         
-        /* --- Bố cục TAB --- */
         .tab-buttons {
             display: flex;
             border-bottom: 2px solid var(--border-color);
@@ -63,7 +61,6 @@
             border-bottom-color: var(--primary-color);
         }
 
-        /* --- Phần Lý Thuyết --- */
         .tab-content { text-align: left; }
         #theory h3 {
             font-size: 1.3em;
@@ -82,7 +79,6 @@
             font-style: italic;
         }
 
-        /* --- Phần Quiz --- */
         #practice { text-align: center; }
         button {
             background-color: var(--primary-color);
@@ -120,7 +116,6 @@
         .memory-tip { font-style: italic; color: #6c757d; background: #e9ecef; padding: 15px; border-radius: 6px; margin-top: 15px; border-left: 4px solid var(--primary-color); }
         #next-btn { background-color: var(--success-color); }
         
-        /* --- Trang Kết quả --- */
         #results-screen { text-align: left; }
         .result-item { background: #fdfdff; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
         .unanswered { color: var(--warning-color); font-weight: bold; }
@@ -269,7 +264,27 @@
                 { question: "Chu kỳ máy (Machine Cycle) của CPU bao gồm ba pha cơ bản nào theo đúng thứ tự?", options: ["Decode, Fetch, Execute", "Fetch, Execute, Decode", "Fetch, Decode, Execute", "Execute, Fetch, Decode"], answer: 2, tip: "Quy trình hợp lý: Lấy lệnh (Fetch), Hiểu lệnh (Decode), rồi mới làm theo lệnh (Execute)." },
                 { question: "Kiến trúc máy tính nào sử dụng một tập lệnh lớn và phức tạp?", options: ["RISC (Reduced Instruction Set Computer)", "MIMD", "CISC (Complex Instruction Set Computer)", "SIMD"], answer: 2, tip: "C trong CISC là viết tắt của 'Complex' (phức tạp)." },
                 { question: "Kỹ thuật nào cho phép CPU xử lý gối đầu các pha của nhiều lệnh khác nhau cùng một lúc để tăng hiệu suất?", options: ["Parallel Processing", "Pipelining", "DMA", "Multitasking"], answer: 1, tip: "Pipelining giống như một dây chuyền lắp ráp, mỗi công đoạn xử lý một sản phẩm khác nhau, giúp tăng tổng sản lượng." },
-                { question: "Phương pháp nào cho phép một thiết bị I/O tốc độ cao truyền dữ liệu trực tiếp với bộ nhớ chính mà không cần sự can thiệp của CPU?", options: ["Programmed I/O", "Interrupt-driven I/O", "DMA (Direct Memory Access)", "Memory-mapped I/O"], answer: 2, tip: "DMA là 'truy cập bộ nhớ trực tiếp', nghĩa là đi thẳng đến bộ nhớ mà không cần qua 'trung gian' CPU." }
+                { question: "Phương pháp nào cho phép một thiết bị I/O tốc độ cao truyền dữ liệu trực tiếp với bộ nhớ chính mà không cần sự can thiệp của CPU?", options: ["Programmed I/O", "Interrupt-driven I/O", "DMA (Direct Memory Access)", "Memory-mapped I/O"], answer: 2, tip: "DMA là 'truy cập bộ nhớ trực tiếp', nghĩa là đi thẳng đến bộ nhớ mà không cần qua 'trung gian' CPU." },
+                { question: "Loại RAM nào cần được làm tươi (refresh) định kỳ để không mất dữ liệu?", options: ["SRAM (Static RAM)", "DRAM (Dynamic RAM)", "ROM", "EPROM"], answer: 1, tip: "D trong DRAM là 'Dynamic' (động), nó cần được nạp lại năng lượng liên tục để giữ dữ liệu." },
+                { question: "Đơn vị nhỏ nhất có thể truy cập trên một đĩa từ là gì?", options: ["Track", "Cylinder", "Sector", "Block"], answer: 2, tip: "Hãy hình dung một cái bánh pizza: Track là vòng tròn đồng tâm, và Sector là từng miếng bánh nhỏ." },
+                { question: "Chuẩn kết nối nào thường được mô tả là 'hot-swappable' và có thể kết nối tới 127 thiết bị theo cấu trúc cây?", options: ["SCSI", "FireWire", "USB", "HDMI"], answer: 2, tip: "USB (Universal Serial Bus) nổi tiếng với khả năng cắm nóng (hot-swappable) và kết nối nhiều thiết bị." },
+                { question: "Trong phân loại của Flynn, kiến trúc nào có một luồng lệnh và nhiều luồng dữ liệu, phù hợp cho xử lý mảng?", options: ["SISD", "SIMD", "MISD", "MIMD"], answer: 1, tip: "SIMD: Single Instruction, Multiple Data. Một lệnh duy nhất được áp dụng cho nhiều dữ liệu cùng lúc." },
+                { question: "Phương pháp địa chỉ hóa I/O nào coi các thanh ghi của bộ điều khiển I/O như là các ô nhớ trong bộ nhớ chính?", options: ["Isolated I/O", "Programmed I/O", "Memory-mapped I/O", "DMA"], answer: 2, tip: "'Memory-mapped' có nghĩa là 'ánh xạ vào bộ nhớ', coi thiết bị I/O như một phần của không gian địa chỉ bộ nhớ." },
+                { question: "Sắp xếp tốc độ truy cập từ nhanh nhất đến chậm nhất.", options: ["RAM, Cache, Thanh ghi", "Thanh ghi, Cache, RAM", "RAM, Thanh ghi, Cache", "Cache, Thanh ghi, RAM"], answer: 1, tip: "Thanh ghi nằm trong CPU là nhanh nhất, tiếp đến là Cache nằm sát CPU, cuối cùng mới đến RAM." },
+                { question: "Điểm khác biệt cơ bản giữa một thiết bị lưu trữ và một thiết bị không lưu trữ là gì?", options: ["Tốc độ hoạt động", "Khả năng giữ lại thông tin khi mất điện", "Kích thước vật lý", "Giao thức kết nối"], answer: 1, tip: "Thiết bị lưu trữ (ổ cứng, USB) giữ lại dữ liệu, còn thiết bị không lưu trữ (bàn phím) thì không." },
+                { question: "DMA (Direct Memory Access) giúp giải quyết vấn đề gì?", options: ["Tăng tốc độ tính toán của ALU", "Giảm tải cho CPU trong các tác vụ truyền dữ liệu I/O", "Mở rộng không gian địa chỉ", "Tăng dung lượng Cache"], answer: 1, tip: "DMA cho phép I/O và RAM 'nói chuyện' trực tiếp, giải phóng CPU để làm việc khác." },
+                { question: "Trong ba phương pháp I/O, phương pháp nào hiệu quả nhất cho việc truyền khối dữ liệu lớn?", options: ["Programmed I/O", "Interrupt-driven I/O", "DMA", "Cả ba hiệu quả như nhau"], answer: 2, tip: "DMA được sinh ra để chuyên xử lý các khối dữ liệu lớn một cách hiệu quả." },
+                { question: "Tại sao cần có một hệ thống phân cấp bộ nhớ (Memory Hierarchy)?", options: ["Để cân bằng giữa tốc độ, dung lượng và chi phí", "Vì lý do bảo mật", "Để máy tính trông phức tạp hơn", "Để tương thích với các hệ điều hành khác nhau"], answer: 0, tip: "Chúng ta không thể có một bộ nhớ vừa siêu nhanh, vừa siêu lớn, lại vừa siêu rẻ. Hệ thống phân cấp là một sự dung hòa." },
+                { question: "Lợi ích của việc sử dụng phương pháp Memory-mapped I/O là gì?", options: ["Luôn nhanh hơn Isolated I/O", "Tăng cường bảo mật", "Giảm số lượng lệnh cần thiết trong tập lệnh của CPU", "Yêu cầu ít dây nối hơn"], answer: 2, tip: "Khi I/O được xem như bộ nhớ, CPU có thể dùng các lệnh truy cập bộ nhớ sẵn có mà không cần thêm lệnh mới." },
+                { question: "Điểm yếu của phương pháp Programmed I/O là gì?", options: ["CPU phải liên tục chờ và kiểm tra trạng thái thiết bị I/O, gây lãng phí thời gian", "Quá phức tạp để triển khai", "Yêu cầu phần cứng đắt tiền", "Không an toàn"], answer: 0, tip: "Programmed I/O giống như bạn liên tục hỏi 'Xong chưa? Xong chưa?', rất tốn công sức." },
+                { question: "'Interrupt' trong Interrupt-driven I/O là gì?", options: ["Một lỗi trong chương trình", "Một tín hiệu từ thiết bị I/O gửi đến CPU để báo rằng nó đã sẵn sàng", "Một lệnh đặc biệt để dừng CPU", "Một loại virus máy tính"], answer: 1, tip: "Interrupt giống như chuông cửa, thiết bị I/O sẽ 'nhấn chuông' khi nó đã sẵn sàng, thay vì để CPU phải liên tục ra kiểm tra." },
+                { question: "So sánh đĩa từ và băng từ về phương thức truy cập dữ liệu.", options: ["Cả hai đều truy cập ngẫu nhiên", "Cả hai đều truy cập tuần tự", "Đĩa từ truy cập ngẫu nhiên, băng từ truy cập tuần tự", "Đĩa từ truy cập tuần tự, băng từ truy cập ngẫu nhiên"], answer: 2, tip: "Đĩa từ giống như đĩa CD, bạn có thể nhảy đến bài hát bất kỳ (ngẫu nhiên). Băng từ giống như băng cassette, bạn phải tua qua các bài trước (tuần tự)." },
+                { question: "Tại sao lập trình cho máy RISC có thể khó khăn hơn CISC?", options: ["Vì các lệnh quá khó hiểu", "Vì lập trình viên phải tự kết hợp nhiều lệnh đơn giản để thực hiện một tác vụ phức tạp", "Vì không có trình biên dịch cho RISC", "Vì kiến trúc RISC không ổn định"], answer: 1, tip: "RISC cung cấp các 'viên gạch' nhỏ, còn CISC cung cấp các 'bức tường' xây sẵn. Xây bằng gạch sẽ linh hoạt hơn nhưng tốn công hơn." },
+                { question: "Một máy tính có thể có nhiều ALU không?", options: ["Không, mỗi CPU chỉ có một ALU", "Có, trong các kiến trúc xử lý song song như SIMD hoặc MIMD", "Chỉ có trong các siêu máy tính", "Chỉ trong các máy tính đời cũ"], answer: 1, tip: "Xử lý song song chính là việc sử dụng nhiều đơn vị chức năng (như ALU) cùng một lúc." },
+                { question: "Bus dữ liệu 64-bit có nghĩa là gì?", options: ["Nó có thể truyền 64 bit dữ liệu cùng một lúc", "Nó có thể quản lý 64 GB RAM", "Nó có tốc độ 64 GHz", "Nó kết nối được 64 thiết bị"], answer: 0, tip: "Độ rộng của bus dữ liệu giống như số làn đường trên cao tốc. 64-bit là 'cao tốc 64 làn'." },
+                { question: "Vai trò của bộ điều khiển đĩa (disk controller) là gì?", options: ["Quay đĩa", "Cung cấp điện cho đĩa", "Làm trung gian giao tiếp giữa đĩa và bus hệ thống", "Nén dữ liệu trên đĩa"], answer: 2, tip: "Controller giống như một thông dịch viên, giúp bus hệ thống (nói ngôn ngữ điện tử) hiểu được đĩa cứng (nói ngôn ngữ cơ-từ)." },
+                { question: "Tại sao dữ liệu trên CD-ROM không thể bị ghi đè?", options: ["Vì nó được bảo vệ bằng mật khẩu", "Vì dữ liệu được tạo ra bằng cách dập các lỗ (pits) vật lý lên bề mặt đĩa", "Vì thiếu phần mềm hỗ trợ", "Vì đầu đọc laser không đủ mạnh"], answer: 1, tip: "ROM là Read-Only Memory. Dữ liệu được khắc vật lý lên đĩa, giống như khắc chữ lên đá, không thể thay đổi." },
+                { question: "Khái niệm 'non-volatile' áp dụng cho loại bộ nhớ nào?", options: ["RAM", "Cache", "Registers", "ROM"], answer: 3, tip: "'Non-volatile' có nghĩa là không bay hơi, tức là không mất dữ liệu khi mất điện." }
             ];
             while (questionBank.length < 100) {
                 const index = questionBank.length + 1;
