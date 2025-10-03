@@ -18,7 +18,6 @@
             --red-bg: #f8d7da;
             --yellow-bg: #fff3cd;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #f0f2f5;
@@ -27,7 +26,6 @@
             padding: 20px;
             box-sizing: border-box;
         }
-
         #app-container {
             background-color: white;
             padding: 1.5em 2em;
@@ -38,7 +36,6 @@
             margin: 20px auto;
             position: relative;
         }
-
         h1 { color: #0056b3; text-align: center; margin-top: 20px; margin-bottom: 25px; padding-right: 80px; }
         .hidden { display: none; }
         
@@ -53,76 +50,25 @@
             min-width: 80px;
         }
         
-        .tab-buttons {
-            display: flex;
-            border-bottom: 2px solid var(--border-color);
-            margin-bottom: 1.5em;
-        }
-        .tab-link {
-            padding: 15px 25px;
-            cursor: pointer;
-            border: none;
-            background-color: transparent;
-            font-size: 1.1em;
-            font-weight: 600;
-            color: #6c757d;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-        }
-        .tab-link.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-
+        .tab-buttons { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 1.5em; }
+        .tab-link { padding: 15px 25px; cursor: pointer; border: none; background-color: transparent; font-size: 1.1em; font-weight: 600; color: #6c757d; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
+        .tab-link.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
         .tab-content { text-align: left; }
-        #theory h3 {
-            font-size: 1.3em;
-            color: #333;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 5px;
-            margin-top: 25px;
-        }
+        #theory h3 { font-size: 1.3em; color: #333; border-bottom: 2px solid var(--primary-color); padding-bottom: 5px; margin-top: 25px; }
         #theory ul { padding-left: 20px; list-style-type: disc; }
         #theory li { margin-bottom: 10px; line-height: 1.6; }
-        span.highlight {
-            background-color: var(--yellow-bg);
-            padding: 2px 4px;
-            border-radius: 4px;
-        }
-        .highlight-box {
-            background-color: #e7f3ff;
-            border-left: 5px solid var(--primary-color);
-            padding: 20px;
-            margin-top: 30px;
-            border-radius: 8px;
-        }
+        span.highlight { background-color: var(--yellow-bg); padding: 2px 4px; border-radius: 4px; }
+        .highlight-box { background-color: #e7f3ff; border-left: 5px solid var(--primary-color); padding: 20px; margin-top: 30px; border-radius: 8px; }
         .highlight-box h3 { border: none; margin-top: 0; color: #0056b3; }
         .highlight-box ul { list-style-type: '✔ '; padding-left: 20px;}
 
         #practice { text-align: center; }
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            margin: 5px;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-        }
+        button { background-color: var(--primary-color); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; margin: 5px; transition: background-color 0.3s ease, transform 0.1s ease; }
         button:hover { opacity: 0.9; }
         button:active { transform: scale(0.98); }
         button:disabled { background-color: #cccccc; cursor: not-allowed; }
 
-        #custom-question-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
+        #custom-question-container { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 20px; }
         #question-count-input { padding: 12px; border-radius: 8px; border: 2px solid var(--border-color); font-size: 16px; width: 100px; text-align: center; }
         #question-count-input:focus { outline: none; border-color: var(--primary-color); }
         #quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
@@ -142,7 +88,6 @@
         .user-answer.correct { color: var(--success-color); }
         .user-answer.incorrect { color: var(--danger-color); text-decoration: line-through;}
         .correct-answer { color: var(--success-color); font-weight: bold; }
-
     </style>
 </head>
 <body>
@@ -192,9 +137,7 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            
             let currentLanguage = 'vi';
-
             const languageData = {
                 vi: {
                     main_title: "Tổ Chức Máy Tính",
@@ -402,11 +345,19 @@
                 const selectedQuestions = shuffledBank.slice(0, questionCount);
                 
                 currentQuestions = selectedQuestions.map(q => {
-                    const originalOptions = q.options[currentLanguage];
-                    const correctAnswerText = originalOptions[q.answer];
-                    const shuffledOptions = shuffleArray([...originalOptions]);
-                    const newCorrectAnswerIndex = shuffledOptions.indexOf(correctAnswerText);
-                    return { ...q, currentShuffledOptions: shuffledOptions, currentCorrectAnswerIndex: newCorrectAnswerIndex };
+                    const originalOptionsVI = q.options.vi;
+                    const correctAnswerTextVI = originalOptionsVI[q.answer];
+                    
+                    const tempOptions = originalOptionsVI.map((opt, index) => ({ vi: opt, en: q.options.en[index] }));
+                    const shuffledTempOptions = shuffleArray(tempOptions);
+
+                    const newCorrectAnswerIndex = shuffledTempOptions.findIndex(opt => opt.vi === correctAnswerTextVI);
+
+                    return { 
+                        ...q,
+                        shuffledOptions: shuffledTempOptions,
+                        currentCorrectAnswerIndex: newCorrectAnswerIndex 
+                    };
                 });
 
                 currentQuestionIndex = 0;
@@ -432,10 +383,10 @@
                     .replace('{total}', currentQuestions.length);
                 
                 optionsContainer.innerHTML = '';
-                question.currentShuffledOptions.forEach((option, index) => {
+                question.shuffledOptions.forEach((option, index) => {
                     const optionElement = document.createElement('div');
                     optionElement.classList.add('option');
-                    optionElement.textContent = option;
+                    optionElement.textContent = option[currentLanguage];
                     optionElement.dataset.index = index;
                     optionElement.addEventListener('click', () => selectOption(index));
                     optionsContainer.appendChild(optionElement);
@@ -487,12 +438,12 @@
                     const userAnswerIndex = userAnswers[index];
                     let answerHtml;
 
-                    const correctText = question.currentShuffledOptions[question.currentCorrectAnswerIndex];
+                    const correctText = question.shuffledOptions[question.currentCorrectAnswerIndex][currentLanguage];
 
                     if (userAnswerIndex !== null) {
                         const isCorrect = userAnswerIndex === question.currentCorrectAnswerIndex;
                         if (isCorrect) score++;
-                        const chosenText = question.currentShuffledOptions[userAnswerIndex];
+                        const chosenText = question.shuffledOptions[userAnswerIndex][currentLanguage];
                         
                         if (isCorrect) {
                              answerHtml = `<p class="user-answer correct">${lang.you_chose}: ${chosenText}</p>`;
