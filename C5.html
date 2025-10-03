@@ -16,6 +16,7 @@
             --text-color: #212529;
             --green-bg: #d1e7dd;
             --red-bg: #f8d7da;
+            --yellow-bg: #fff3cd;
         }
 
         body {
@@ -35,10 +36,18 @@
             width: 100%;
             max-width: 800px;
             margin: 20px auto;
+            position: relative;
         }
 
-        h1 { color: #0056b3; text-align: center; margin-top: 0; }
+        h1 { color: #0056b3; text-align: center; margin-top: 0; margin-bottom: 25px; }
         .hidden { display: none; }
+        
+        #google_translate_element {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
         
         .tab-buttons {
             display: flex;
@@ -64,20 +73,27 @@
         .tab-content { text-align: left; }
         #theory h3 {
             font-size: 1.3em;
+            color: #333;
             border-bottom: 2px solid var(--primary-color);
             padding-bottom: 5px;
             margin-top: 25px;
         }
         #theory ul { padding-left: 20px; list-style-type: disc; }
         #theory li { margin-bottom: 10px; line-height: 1.6; }
-        .conclusion {
-            margin-top: 30px;
-            padding: 15px;
-            background-color: #e9ecef;
-            border-left: 5px solid var(--success-color);
-            border-radius: 8px;
-            font-style: italic;
+        span.highlight {
+            background-color: var(--yellow-bg);
+            padding: 2px 4px;
+            border-radius: 4px;
         }
+        .highlight-box {
+            background-color: #e7f3ff;
+            border-left: 5px solid var(--primary-color);
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 8px;
+        }
+        .highlight-box h3 { border: none; margin-top: 0; color: #0056b3; }
+        .highlight-box ul { list-style-type: '✔ '; padding-left: 20px;}
 
         #practice { text-align: center; }
         button {
@@ -127,6 +143,7 @@
 </head>
 <body>
     <div id="app-container">
+        <div id="google_translate_element"></div>
         <h1>Computer Organization</h1>
         
         <div class="tab-buttons">
@@ -137,79 +154,65 @@
         <div id="theory" class="tab-content active">
             <h3>1. Ba Hệ Thống Con Của Máy Tính</h3>
             <ul>
-                <li><strong>CPU (Central Processing Unit)</strong>: Bao gồm ALU (thực hiện tính toán & logic), bộ điều khiển (Control Unit), và các thanh ghi (Registers).</li>
-                <li><strong>Main Memory (Bộ nhớ chính)</strong>: Nơi lưu trữ dữ liệu và chương trình đang chạy. Gồm có:
-                    <ul>
-                        <li><strong>RAM</strong> (SRAM, DRAM): Là bộ nhớ khả biến (volatile), dữ liệu sẽ mất khi mất điện.</li>
-                        <li><strong>ROM</strong> (PROM, EPROM, EEPROM): Là bộ nhớ bất biến (non-volatile), không mất dữ liệu khi tắt máy.</li>
-                    </ul>
-                </li>
-                <li><strong>I/O Subsystem (Hệ thống Nhập/Xuất)</strong>: Giúp máy tính giao tiếp với thế giới bên ngoài. Gồm thiết bị lưu trữ (đĩa từ, đĩa quang) và phi lưu trữ (bàn phím, màn hình).</li>
+                <li>Một máy tính gồm 3 hệ thống con: <strong>CPU (Central Processing Unit)</strong>, <strong>Main Memory (Bộ nhớ chính)</strong>, và <strong>I/O Subsystem (Hệ thống Nhập/Xuất)</strong>.</li>
             </ul>
 
             <h3>2. Bộ Xử Lý Trung Tâm (CPU) Chi Tiết</h3>
             <ul>
-                <li><strong>ALU</strong>: Thực hiện các phép toán logic, dịch chuyển bit và số học.</li>
-                <li><strong>Registers</strong>: Các vị trí lưu trữ tạm thời, tốc độ cao để chứa dữ liệu.
+                <li>Là "bộ não" của máy tính, có 3 thành phần chính:
                     <ul>
-                        <li><strong>Program Counter (PC)</strong>: Luôn trỏ tới địa chỉ của lệnh tiếp theo sẽ được thực thi.</li>
-                        <li><strong>Instruction Register (IR)</strong>: Chứa lệnh đang được giải mã và thực thi.</li>
+                        <li><span class="highlight"><strong>ALU (Arithmetic Logic Unit)</strong></span>: Thực hiện các phép toán số học và logic.</li>
+                        <li><span class="highlight"><strong>Control Unit (Khối Điều khiển)</strong></span>: Điều phối và kiểm soát mọi hoạt động của các thành phần khác.</li>
+                        <li><span class="highlight"><strong>Registers (Thanh ghi)</strong></span>: Vùng nhớ tạm thời tốc độ cực cao bên trong CPU.
+                            <ul>
+                                <li><strong>Program Counter (PC)</strong>: Luôn trỏ tới địa chỉ của lệnh <strong>tiếp theo</strong>.</li>
+                                <li><strong>Instruction Register (IR)</strong>: Chứa lệnh <strong>đang được</strong> giải mã và thực thi.</li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
-                <li><strong>Control Unit</strong>: Điều khiển hoạt động của CPU và các bộ phận khác.</li>
             </ul>
 
             <h3>3. Bộ Nhớ Chính (Main Memory) Chi Tiết</h3>
             <ul>
-                <li>Gồm nhiều ô nhớ, mỗi ô có một địa chỉ duy nhất để định danh.</li>
-                <li><strong>Address Space</strong>: Là tổng số lượng ô nhớ có thể được định danh một cách duy nhất.</li>
-                <li><strong>Memory Hierarchy (Hệ thống phân cấp bộ nhớ)</strong>: Sắp xếp bộ nhớ theo thứ tự tốc độ giảm dần và dung lượng tăng dần: Registers → Cache → Main Memory → Secondary Storage.</li>
-            </ul>
-
-            <h3>4. Hệ Thống I/O và Địa Chỉ Hóa</h3>
-            <ul>
-                <li><strong>Kết nối</strong>: Các thiết bị I/O kết nối với bus hệ thống thông qua các bộ điều khiển (controller) như USB, FireWire, SCSI.</li>
-                <li><strong>Địa chỉ hóa I/O</strong>: Có hai phương pháp chính.
-                    <ul>
-                        <li><strong>Isolated I/O</strong>: Sử dụng các lệnh riêng biệt để đọc/ghi với thiết bị I/O.</li>
-                        <li><strong>Memory-mapped I/O</strong>: Coi các thanh ghi của thiết bị I/O như những ô nhớ, sử dụng chung tập lệnh truy cập bộ nhớ.</li>
-                    </ul>
-                </li>
-            </ul>
-
-            <h3>5. Liên Kết Hệ Thống Con</h3>
-            <ul>
-                <li>Các thành phần được kết nối với nhau qua hệ thống <strong>Bus</strong>.
-                    <ul>
-                        <li><strong>Data Bus</strong>: Dùng để truyền dữ liệu.</li>
-                        <li><strong>Address Bus</strong>: Dùng để truyền địa chỉ.</li>
-                        <li><strong>Control Bus</strong>: Dùng để truyền các tín hiệu điều khiển.</li>
-                    </ul>
-                </li>
-            </ul>
-
-            <h3>6. Thực Thi Chương Trình</h3>
-            <ul>
-                <li><strong>Chu kỳ máy (Machine Cycle)</strong>: Gồm 3 bước lặp lại:
-                    <ol>
-                        <li><strong>Fetch</strong> – Nạp lệnh từ bộ nhớ.</li>
-                        <li><strong>Decode</strong> – Giải mã lệnh.</li>
-                        <li><strong>Execute</strong> – Thực thi lệnh.</li>
-                    </ol>
-                </li>
-                <li><strong>Đồng bộ CPU và I/O</strong>: Có 3 phương pháp chính: Programmed I/O, Interrupt-driven I/O, và <strong>Direct Memory Access (DMA)</strong>.</li>
-            </ul>
-
-            <h3>7. Các Kiến Trúc Máy Tính</h3>
-            <ul>
-                <li><strong>CISC</strong>: Tập lệnh lớn và phức tạp.</li>
-                <li><strong>RISC</strong>: Tập lệnh nhỏ, đơn giản, thực thi nhanh.</li>
-                <li><strong>Pipelining</strong>: Cho phép xử lý gối đầu nhiều lệnh để tăng thông lượng.</li>
-                <li><strong>Parallel Processing</strong>: Sử dụng nhiều đơn vị xử lý đồng thời (ví dụ: SIMD, MIMD).</li>
+                <li>Gồm nhiều ô nhớ, mỗi ô có một <strong>địa chỉ (address)</strong> duy nhất.</li>
+                <li><strong>RAM (Random Access Memory)</strong>: Bộ nhớ đọc-ghi, dữ liệu <span class="highlight"><strong>mất khi ngắt điện</strong> (volatile)</span>. Gồm SRAM và DRAM.</li>
+                <li><strong>ROM (Read-Only Memory)</strong>: Bộ nhớ chỉ đọc, <span class="highlight"><strong>không mất dữ liệu</strong> khi ngắt điện (non-volatile)</span>.</li>
+                <li><strong>Cache Memory</strong>: Bộ nhớ đệm siêu nhanh, nằm giữa CPU và RAM để tăng tốc độ.</li>
+                <li><strong>Memory Hierarchy (Hệ thống phân cấp bộ nhớ)</strong>: Sắp xếp theo tốc độ giảm dần: <span class="highlight">Registers → Cache → Main Memory → Secondary Storage</span>.</li>
             </ul>
             
-            <div class="conclusion">
-                <p>✅ <strong>Kết luận</strong>: Máy tính gồm 3 hệ thống con (CPU, Memory, I/O), kết nối qua bus. CPU thực hiện chu kỳ fetch–decode–execute để chạy chương trình. Các kiến trúc và kỹ thuật hiện đại được phát triển để tối ưu hóa hiệu năng.</p>
+            <h3>4. Thực Thi Chương Trình</h3>
+            <ul>
+                <li><strong>Chu kỳ máy (Machine Cycle)</strong>: Là chu trình lặp lại gồm 3 bước cốt lõi:
+                    <ol>
+                        <li><span class="highlight"><strong>Fetch</strong></span> – Nạp lệnh từ bộ nhớ.</li>
+                        <li><span class="highlight"><strong>Decode</strong></span> – Giải mã lệnh.</li>
+                        <li><span class="highlight"><strong>Execute</strong></span> – Thực thi lệnh.</li>
+                    </ol>
+                </li>
+                <li><strong>Đồng bộ CPU và I/O</strong>: Có 3 phương pháp, trong đó <strong>Direct Memory Access (DMA)</strong> là hiệu quả nhất cho việc truyền khối dữ liệu lớn vì nó không cần sự can thiệp liên tục của CPU.</li>
+            </ul>
+
+            <h3>5. Các Kiến Trúc Máy Tính</h3>
+            <ul>
+                <li><strong>CISC</strong>: Tập lệnh lớn và phức tạp.</li>
+                <li><strong>RISC</strong>: Tập lệnh nhỏ, đơn giản, giúp thực thi nhanh hơn.</li>
+                <li><strong>Pipelining</strong>: Cho phép xử lý gối đầu nhiều lệnh để tăng <strong>thông lượng (throughput)</strong>.</li>
+                <li><strong>Parallel Processing</strong>: Sử dụng nhiều đơn vị xử lý đồng thời.</li>
+            </ul>
+            
+            <div class="highlight-box">
+                <h3>💡 Điểm Cốt Lõi Cần Nhớ</h3>
+                <ul>
+                    <li>Máy tính gồm 3 phần: <strong>CPU, Memory, I/O.</strong></li>
+                    <li>CPU gồm: <strong>ALU, Control Unit, Registers.</strong></li>
+                    <li><strong>RAM</strong> thì mất điện là mất dữ liệu, <strong>ROM</strong> thì không.</li>
+                    <li>Thứ tự tốc độ: <strong>Registers > Cache > RAM.</strong></li>
+                    <li>Chu trình bất biến của CPU là <strong>Fetch → Decode → Execute.</strong></li>
+                    <li><strong>DMA</strong> là phương pháp truyền dữ liệu I/O hiệu quả nhất.</li>
+                    <li><strong>Pipelining</strong> và <strong>Parallel Processing</strong> là hai kỹ thuật chính để tăng hiệu năng.</li>
+                </ul>
             </div>
         </div>
 
@@ -245,12 +248,11 @@
         </div>
     </div>
     
-    <div id="google_translate_element" style="position: fixed; bottom: 10px; right: 10px; z-index: 1000;"></div>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script>
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'vi', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+            new google.translate.TranslateElement({pageLanguage: 'vi', autoDisplay: false, layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
         }
 
         document.addEventListener('DOMContentLoaded', () => {
